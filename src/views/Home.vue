@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div>
+  <div class="page-container">
     <div class="banner">
-      Toshiki's Infrastructure
+      <span class="hero-text">🧀 Toshiki's Infrastructure</span>
       <div class="right-toolbar">
         <div class="quick-button" @click="toggleColorMode">
           <inline-svg :src="colorMode === 'light' ? icoLight : icoDark" />
@@ -89,10 +89,17 @@
         <ServerPanel
           v-for="server in serverList"
           :key="server.name"
-          :info="server"
+          :info="{
+            ...server,
+            uptime: server.uptime ? server.uptime.replace('天', ' days') : server.uptime
+          }"
           :size="panelSize"
           :traffic-mode="trafficMode"
-        />
+        >
+          <template #uptime="{ uptime }">
+            <span>🧀 {{ uptime }}</span>
+          </template>
+        </ServerPanel>
       </div>
     </div>
     <div class="footer">
@@ -360,14 +367,27 @@ function arrEqual(a: unknown[], b: unknown[]) {
   }
 }
 
+
 .banner {
+  margin-top: 32px;
   margin-bottom: 15px;
   font-size: 18px;
   font-weight: 500;
 
+  .hero-text {
+    font-weight: 700;
+  }
+
   .right-toolbar {
     float: right;
   }
+}
+
+.info,
+.summary,
+.toolbar,
+.list {
+  margin-top: 16px;
 }
 
 .toolbar {
@@ -500,4 +520,13 @@ function arrEqual(a: unknown[], b: unknown[]) {
     margin: 0 5px;
   }
 }
+  .page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-container > .footer {
+    margin-top: auto;
+  }
 </style>
